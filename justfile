@@ -1,17 +1,8 @@
-  #!/usr/bin/env bash
-  set -euo pipefail
+build-machine machine:
+  nix build .#nixosConfigurations.{{machine}}.config.system.build.toplevel
 
-  machine="{{machine}}-{{type}}"
-  build="config.system.build.{{type}}"
+build-vm machine:
+  nix build .#nixosConfigurations.{{machine}}.config.system.build.vm
 
-  case '{{type}}' in
-    toplevel) machine="{{ machine }}" ;;
-    container) build="config.microvm.declaredRunner" ;;
-    vm) ;;
-    *) echo "Unsupported type: '{{type}}'"; exit 1;;
-  esac
-
-  set -x
-
-  {{ nix-build-link }} "{{result-dir}}/$machine" \
-    "{{root-dir}}#nixosConfigurations.${machine}.${build}"
+start-vm machine: (build-vm machine)
+  ./result/bin/run-nixos-vm
