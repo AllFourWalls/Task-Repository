@@ -1,2 +1,12 @@
-.direnv
+# Nix build artifacts
 result
+.result
+
+# Direnv
+.direnv
+
+# QEMU VM state
+*.qcow2
+
+# dotenv environment variable files
+.env
